@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 import Darwin.Mach
 
 struct SystemSnapshot: Sendable {
@@ -53,7 +54,7 @@ final class SystemMonitor {
         }
         guard result == KERN_SUCCESS else { return (0, total) }
 
-        let pageSize = UInt64(vm_kernel_page_size)
+        let pageSize = UInt64(getpagesize())
         let active = UInt64(stats.active_count) * pageSize
         let wired = UInt64(stats.wire_count) * pageSize
         let compressed = UInt64(stats.compressor_page_count) * pageSize
