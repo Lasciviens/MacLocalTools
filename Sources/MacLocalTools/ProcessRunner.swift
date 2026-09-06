@@ -19,7 +19,9 @@ enum ProcessRunnerError: Error, LocalizedError {
 
 struct ProcessRunner: Sendable {
     private static let allowedExecutables: Set<String> = [
-        "/usr/bin/pmset"
+        "/usr/bin/pmset",
+        "/usr/bin/defaults",
+        "/usr/bin/killall"
     ]
 
     func run(executable: String, arguments: [String]) async throws -> ProcessResult {
