@@ -25,4 +25,19 @@ final class SleepDoctorTests: XCTestCase {
         let events = SleepDoctor.parseWakeEvents(sample)
         XCTAssertEqual(events.count, 3)
     }
+
+    func testInsightsDetectSharingdAndTCPKeepAlive() {
+        let assertions = "PreventUserIdleSystemSleep named: sharingd"
+        let custom = "tcpkeepalive 1\npowernap 0"
+        let insights = SleepDoctor.buildInsights(assertions: assertions, custom: custom, log: "")
+
+        XCTAssertTrue(insights.contains { $0.title.contains("sharingd") })
+        XCTAssertTrue(insights.contains { $0.title.contains("TCPKeepAlive") })
+        XCTAssertFalse(insights.contains { $0.title.contains("Power Nap") })
+    }
+
+    func testCountsDarkWakeEntries() {
+        let log = "DarkWake\nDarkWake\nMaintenanceWake"
+        XCTAssertEqual(SleepDoctor.countOccurrences("darkwake", in: log), 2)
+    }
 }
